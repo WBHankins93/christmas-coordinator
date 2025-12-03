@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/client'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 
 // GET all gift exchange participants
 export async function GET() {
+  if (!isSupabaseConfigured || !supabase) {
+    return NextResponse.json(
+      { error: 'Database not configured. Please set up Supabase environment variables.' },
+      { status: 503 }
+    )
+  }
+
   try {
     const { data, error } = await supabase
       .from('gift_exchange')
@@ -24,6 +31,13 @@ export async function GET() {
 
 // POST create gift exchange entry
 export async function POST(request: NextRequest) {
+  if (!isSupabaseConfigured || !supabase) {
+    return NextResponse.json(
+      { error: 'Database not configured. Please set up Supabase environment variables.' },
+      { status: 503 }
+    )
+  }
+
   try {
     const body = await request.json()
     const { name, email, bringing_gift, notes } = body

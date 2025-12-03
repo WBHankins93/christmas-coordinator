@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/client'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 
 // GET all attendees
 export async function GET() {
+  if (!isSupabaseConfigured || !supabase) {
+    return NextResponse.json(
+      { error: 'Database not configured. Please set up Supabase environment variables.' },
+      { status: 503 }
+    )
+  }
+
   try {
     const { data, error } = await supabase
       .from('attendees')
@@ -23,6 +30,13 @@ export async function GET() {
 
 // POST create new attendee
 export async function POST(request: NextRequest) {
+  if (!isSupabaseConfigured || !supabase) {
+    return NextResponse.json(
+      { error: 'Database not configured. Please set up Supabase environment variables.' },
+      { status: 503 }
+    )
+  }
+
   try {
     const body = await request.json()
     const { name, email } = body

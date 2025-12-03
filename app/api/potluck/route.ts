@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/client'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 
 // GET all potluck items
 export async function GET(request: NextRequest) {
+  if (!isSupabaseConfigured || !supabase) {
+    return NextResponse.json(
+      { error: 'Database not configured. Please set up Supabase environment variables.' },
+      { status: 503 }
+    )
+  }
+
   try {
     const searchParams = request.nextUrl.searchParams
     const category = searchParams.get('category')
@@ -32,6 +39,13 @@ export async function GET(request: NextRequest) {
 
 // POST create potluck item
 export async function POST(request: NextRequest) {
+  if (!isSupabaseConfigured || !supabase) {
+    return NextResponse.json(
+      { error: 'Database not configured. Please set up Supabase environment variables.' },
+      { status: 503 }
+    )
+  }
+
   try {
     const body = await request.json()
     const { name, email, dish_name, category, dietary_notes } = body
