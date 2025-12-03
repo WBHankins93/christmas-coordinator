@@ -1,22 +1,24 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import { PARTY_DATE, PARTY_THEME } from "@/lib/constants";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: '#DC2626',
+}
 
 export const metadata: Metadata = {
   title: `${PARTY_THEME} - December 19, 2024`,
   description: "RSVP for gift exchange and potluck for our Candy Land themed Christmas party!",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Christmas Party',
+  },
 };
 
 export default function RootLayout({
@@ -26,9 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="antialiased">
         <Header />
         <main className="min-h-screen">
           {children}
